@@ -4,4 +4,5 @@ code search.js
 npm init -y
 npm i commander
 npm i --save-dev nodemon
+npm run start -- -f commandused.txt -q npm   // run is optional
 cls
