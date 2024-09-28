@@ -1,0 +1,7 @@
+mkdir fileSearchApp
+cd fileSearchApp
+code search.js
+npm init -y
+npm i commander
+npm i --save-dev nodemon
+cls
