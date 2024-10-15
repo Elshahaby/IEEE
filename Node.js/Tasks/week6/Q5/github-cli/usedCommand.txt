@@ -1,0 +1,8 @@
+mkdir github-cli
+cd github-cli
+npm init -y
+npm install axios                   --> I search for it.
+npm install nodemon --save-dev
+code index.js
+echo "node_modules/" >> .gitignore  --> I search for it.
+cls

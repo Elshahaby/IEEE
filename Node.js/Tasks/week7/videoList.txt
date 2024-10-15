@@ -1,0 +1,8 @@
+https://www.youtube.com/watch?v=t1ovpjismUs  --> ejs
+https://www.youtube.com/watch?v=yXEesONd_54   --> view Engines and dynamic content
+
+
+- routing using pure node.js and switch case to handle the different cases of urls
+- net ninja Node.js Crash Course Tutorial #4
+---> https://www.youtube.com/watch?v=DQD00NAUPNk&list=PL4cUxeGkcC9jsz4LDYc6kv3ymONOKxwBU&index=4
+
