@@ -1,4 +1,0 @@
-npm init -y
-npm i --save-dev nodemon
-npm start
-npm run rn
