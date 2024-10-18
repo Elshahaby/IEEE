@@ -50,6 +50,8 @@ app.post('/add-task', async (req, res) => {
     }
 });
 
+// adding the app.delete and handle the ejs file of tasks to doing this
+// but I think that way is doing well
 app.post('/delete-task/:id', async (req, res) => {
     try {
       console.log(req.params.id);
