@@ -1,0 +1,41 @@
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Task</title>
+    <link rel="stylesheet" href="/style.css">
+  </head>
+  <body>
+    <h1>Add a New Task</h1>
+
+    <% if (errors && errors.length > 0) { %>
+      <ul>
+        <% errors.forEach(error => { %>
+          <li><%= error.msg %></li>
+        <% }) %>
+      </ul>
+    <% } %>
+    
+
+    <form action="/task/addTask" method="POST">
+      
+      <label for="name">Task Name:</label>
+      <input type="text" id="name" name="name" required minlength="3">
+      <br> 
+
+      <label for="date">Date:</label>
+      <input type="date" id="date" name="date" required>
+      <br> 
+
+      <label for="description">Task Discription:</label>
+      <textarea id="description" name="description" rows="4" required></textarea>
+      <br> 
+
+
+      <button type="submit">Add Task</button>
+    </form>
+    <br>
+    <a href="/task/allTasks">Back to Tasks</a>
+  </body>
+  </html>
