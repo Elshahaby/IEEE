@@ -20,6 +20,8 @@ export const validateAddTask = [
   body('description')
     .notEmpty()
     .withMessage('Description is required')
+    .isLength({min: 10})
+    .withMessage('The task description must be at least 10 characters long')
     .isString()
     .withMessage('Description must be a valid string'),
 ];

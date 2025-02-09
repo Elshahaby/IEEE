@@ -34,7 +34,7 @@ export const storeAddedTask = async (req: Request, res: Response, next: NextFunc
         await newTask.save();
         res.redirect('/task/allTasks');
 
-    }catch(err){
+    }catch{
         next(new DatabasePostError('Can not post the document to Database'));
     }
 }
