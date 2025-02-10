@@ -30,8 +30,8 @@ mongoose.connect(URL)
 }).catch((err) => { console.log(err) } );
 
 
-app.all('*', (next: NextFunction) => {
-    next(new Error());
-})
+    app.all('*', (next: NextFunction) => {
+        next(new Error());
+    })
 
 app.use(errorHandler);
