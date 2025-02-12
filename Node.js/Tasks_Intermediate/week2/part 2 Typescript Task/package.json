@@ -2,6 +2,7 @@
   "dependencies": {
     "@types/express": "^5.0.0",
     "@types/node": "^22.13.1",
+    "ts-node": "^10.9.2",
     "tsx": "^4.19.2",
     "typescript": "^5.7.3",
     "zod": "^3.24.1"
@@ -11,6 +12,9 @@
   "main": "index.js",
   "scripts": {
     "res": "tsx --watch main.ts",
+    "res1": "ts-node main.ts",
+    "dev": "ts-node index.ts",
+    "dev1": "tsx --watch index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
