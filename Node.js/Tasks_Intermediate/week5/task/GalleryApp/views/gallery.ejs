@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+
+    <link rel="stylesheet" href="/css/galleryStyles.css">
+    <link rel="stylesheet" href="/css/messageStyles.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/js/confirmDeletion.js" defer></script>
+    <script src="/js/removeFlashMessages.js"></script>
+
+</head>
+<body>
+    
+    <div class="message-container">
+        <%- include('./messages.ejs') %>
+    </div>
+  
+    <div class="header-container">
+        <h2>Uploaded Images</h2>
+        <a href="/gallery/upload" class="back-btn">Upload More</a>
+    </div>
+
+    <div class="container">
+    
+        <div class="grid">
+            <% images.forEach(image => { %>
+                <div class="image-card">
+                    <a href="<%= image.secure_url %>" target="_blank">
+                        <img src="<%= image.secure_url %>" alt="Uploaded Image">
+                    </a>
+                    <button class="delete-btn" data-image-id="<%= image._id %>">Delete</button>
+                </div>
+            <% }) %>
+        </div>
+    </div>
+</body>
+</html>

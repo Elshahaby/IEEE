@@ -1,0 +1,24 @@
+<!-- Display error messages (Hidden Initially) -->
+<% if (errors && errors.length > 0) { %>
+    <div class="alert-container">
+        <% errors.forEach((msg, index) => { %>
+            <div class="alert alert-danger hidden" id="error-<%= index %>">
+                <p><%= msg %></p>
+                <!-- <button type="button" class="close-btn" aria-label="Close">&times;</button> -->
+            </div>
+        <% }) %>
+    </div>
+<% } %>
+
+
+<!-- Display success messages -->
+<% if (success && success.length > 0) { %>
+    <div class="alert-container">
+        <% success.forEach(msg => { %>
+            <div class="alert alert-success">
+                <p><%= msg %></p>
+                <!-- <button type="button" class="close-btn" aria-label="Close">&times;</button> -->
+            </div>
+        <% }) %>
+    </div>
+<% } %>

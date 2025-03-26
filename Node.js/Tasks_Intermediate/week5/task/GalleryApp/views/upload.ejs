@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/uploadStyles.css">
+    <link rel="stylesheet" href="/css/messageStyles.css">
+    <script src="/js/removeFlashMessages.js"></script>
+
+</head>
+<body>
+
+    <div class="message-container">
+        <%- include('./messages.ejs') %>
+    </div>
+    
+    <br>
+    <div></div>
+    <br>
+    <br>
+
+    <div class="container">
+ 
+        <!-- 🔹 Image Upload Form -->
+        <form action="/gallery/upload" method="POST" enctype="multipart/form-data" class="upload-form">
+            <label for="imageInput" class="file-label">Choose an Image</label>
+            <input type="file" id="imageInput" name="image" class="file-input">
+            <br>
+            <div id="previewContainer" class="preview-container"></div>
+            <br>
+            <button type="submit" class="upload-btn">Upload</button>
+        </form>
+
+        <!-- 🔹 Show Images Button -->
+        <form action="/gallery" method="GET">
+            <button type="submit" class="show-btn">Show Images</button>
+        </form>
+
+        <a href="/auth/logout" class="logout-btn">Logout</a>
+
+    </div>
+    <script>
+        document.getElementById("imageInput").addEventListener("change", function (event) {
+            const previewContainer = document.getElementById("previewContainer");
+            previewContainer.innerHTML = ""; // Clear previous previews
+            const files = event.target.files;
+
+            if (files.length > 1) {
+                Swal.fire({
+                    title: "Only one image allowed!",
+                    text: "You can upload only one image at a time.",
+                    icon: "warning"
+                });
+                event.target.value = ""; // Reset file input
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const img = document.createElement("img");
+                img.src = e.target.result;
+                img.classList.add("preview-img");
+                previewContainer.appendChild(img);
+            };
+            reader.readAsDataURL(files[0]);
+        });
+    </script>
+
+</body>
+</html>
