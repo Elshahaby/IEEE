@@ -2,36 +2,52 @@ import express from 'express'
 import morgan from 'morgan'
 import createError from 'http-errors'
 import dotenv from 'dotenv'
-
+import authRoutes from './UserAuth/auth.routes.js'
+import { verifyAccessToken } from './UserAuth/token.jwt.js'
+// import './UserAuth/redis.config.js'
 dotenv.config();
 
 const app = express();
 
+app.use(morgan('dev'));
 
-app.get('/', async(req, res, next) => {
-    res.send('Hello from express.');
+
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
+
+
+
+app.get('/',verifyAccessToken ,async(req, res, next) => {
+    try {
+        console.log('req.payload : ', req.payload)
+        res.send('Hello from express.');
+    } catch (error) {
+        console.log('from main route : ', error);
+        next(error);
+    }
 })
 
+app.use('/auth', authRoutes);
 
 app.use(async(req, res, next) => {
-    const error = new Error("not found");
-    error.status = 404;
-    next(error);
-    // next(createError.NotFound('This route does not exist'));
+    next(createError.NotFound('This route does not exist'));
 })
 
 app.use((err, req, res, next) => {
-    res.status(err.status || 500);
-    res.send({
+    // console.log("General ERROR HANDLER")
+    if (err.name === 'ValidationError') {
+        return res.status(err.statusCode || 400).json({
+            message: 'Validation failed',
+            errors: err.errors
+        });
+    }
+
+    res.status(err.status || 500).json({
         error:{
             status: err.status || 500,
-            message: err.message,
+            message: err.message || 'Internal server error',
         }
     })
 })
 
-const PORT = process.env.PORT || 3000;
-
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-})
+export default app;
