@@ -11,7 +11,7 @@ export async function register (req, res, next) {
         const {email, password} = req.body;
 
         const doesExist = await User.findOne({ email });
-        if(doesExist) throw createError.Conflict(`${email} is already been registered`);
+        if(doesExist) throw createError.Conflict(`${email} is already been registered, try to login`);
 
         const newUser = new User({email, password});
         await newUser.save();
@@ -19,7 +19,7 @@ export async function register (req, res, next) {
         const accessToken = await signAccessToken(newUser.id);
         const refreshToken = await signRefreshToken(newUser.id);
 
-        res.json( {accessToken, refreshToken} ) ;
+        res.status(201).json( {accessToken, refreshToken} ) ;
 
     }catch(error){
         next(error);
@@ -47,6 +47,7 @@ export async function login (req, res, next) {
     }
 }
 
+// Refresh Token Rotation (RTR): is a common and highly recommended security pattern.
 export async function refresh_token (req, res, next) {
     try {
         const { refreshToken } = req.body;

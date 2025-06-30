@@ -1,0 +1,511 @@
+openapi: 3.0.0
+info:
+  title: JWT API
+  description: A sample API for managing users and products.
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: apiteam@swagger.io
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:3000
+    description: Local Development Server
+
+tags:
+  - Auth
+  - Root
+
+components:
+  schemas:
+    Message:
+      type: "object"
+      properties:
+        message:
+          type: string
+    
+    ErrorResponse:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: object
+          required:
+            - status
+            - message 
+          properties:
+            status:
+              type: integer
+              description: The HTTP status code of the error
+              enum: [401, 403,409, 500]
+            message:
+              type: string
+              description: A human-readable error message.
+    
+    RegisterRequest:
+      description: Request body for user registration.
+      type: object
+      required:
+        - email
+        - password
+        - confirmPassword
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+          minLength: 8
+        confirmPassword:
+          type: string
+          format: password
+          minLength: 8
+
+    LoginResponse:
+      description: Response body containing authentication tokens.
+      type: object
+      required:
+        - accessToken
+        - refreshToken
+      properties:
+        accessToken:
+          type: string
+          description: JWT Access Token (short-lived)
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxMjMiLCJpYXQiOjE2NzgyOTk3ODQsImV4cCI6MTY3ODI5OTg0NH0.xyzabc
+        refreshToken:
+          type: string
+          description: JWT Refresh Token (long-lived)
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxMjMiLCJpYXQiOjE2NzgyOTk3ODQsImV4cCI6MTY3ODkwNDU4NH0.defghi
+    
+    validationErrorItem:
+      description: element at the errors array that array contains all validation errors.
+      type: object
+      required:
+        - path
+        - message
+      properties:
+        path:
+          type: string
+          description: The feild that failed validation.
+          example: "password"
+        message:
+          type: string
+          description: The specific validation error message for the path or feild.
+          example: "Password must be at least 8 characters long"
+    
+    validationError:
+      type: object
+      description: Show all the validation errors at once.
+      required: 
+        - status
+        - message
+        - errors
+      properties:
+        status:
+          type: integer
+          description: The HTTP status code for validation errors.
+          example: 422
+        message: 
+          type: string
+          description: A general message indicating validation failure.
+          example: "validation failed"
+        errors:
+          description: An array of detailed validation errors.
+          type: array
+          item: 
+            $ref: '#/components/schemas/validationErrorItem'
+      example:
+        RegistrationValidationErrorExample:
+          $ref: '#/components/examples/RegistrationValidationErrorExample'
+    
+    LoginRequest:
+      type: object
+      description: Request Body for user login
+      required:
+        - email
+        - password
+      properties:
+        email: 
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+          minLength: 
+
+    RefreshTokenRequest:
+      description: Request Body for Refresh the accessToken and get new RefreshToken too
+      type: object
+      required:
+      - refreshToken
+      properties:
+        refreshToken:
+          type: string
+          description: The refresh token obtained during login or previous refresh
+    
+    LogoutRequest:
+      description: Request Body of the logout process
+      type: object
+      required:
+        - refreshToken
+      properties:
+        refreshToken:
+          type: string
+          description: The refresh token to invalidate.
+          
+
+  securitySchemes:
+    bearerAuth: 
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+
+  examples:
+    InternalServerError:
+      summary: Internal Server Error
+      value:
+        error:
+          status: 505
+          message: "Internal server error"
+    EmailConflictErrorExample:
+      summary: Example for an email conflict during registration
+      value:
+        error:
+          status: 409
+          message: "newuser7@gmail.com is already been registered"
+    UnauthorizedGeneric:
+      summary: Generic Unauthorized Response
+      value:
+        error:
+          status: 401
+          message: "Unauthorized"
+    TokensResponseExample:
+      summary: Response of the registration process
+      value:
+        accessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODYxNDgyMThmZTY1MjAxYjlmZWIwOGUiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTEyMDU5MjIsImV4cCI6MTc1MTIwNjA0MiwiYXVkIjoiNjg2MTQ4MjE4ZmU2NTIwMWI5ZmViMDhlIiwiaXNzIjoiZ29vZ2xlLmNvbSJ9.X5536Mt5khuDCSW3zK9BJxFXs-KAmSL0Bb3uMegD7pw"
+        refreshToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3NTEyMDU5MjIsImV4cCI6MTc4Mjc2MzUyMiwiYXVkIjoiNjg2MTQ4MjE4ZmU2NTIwMWI5ZmViMDhlIiwiaXNzIjoiZ29vZ2xlLmNvbSJ9.4pNTOcOiO-QO8Iv2P3_8X6FzVbBH6vplhLyokQCuzCg"
+    RegisterValidationFailedExample:
+      summary: Example for registration validation failures.
+      value:
+        status: 422
+        message: "Validation failed"
+        errors:
+          - path: "email"
+            message: "newuser9gmail.com is not a valid email address"
+          - path: "password"
+            message: "Password must be at least 8 characters long"
+          - path: "password"
+            message: "Password must contain at least one number, one uppercase letter, and one lowercase letter"
+          - path: "confirmPassword"
+            message: "Passwords do not match"
+    RegisterBodyExample:
+      summary: Example of the body of the register process
+      value:
+        email: "newuser3@gmail.com"
+        password: "M1234mohamed"
+        confirmPassword: "M1234mohamed"
+
+    LoginBodyExample:
+      summary: Example of the body of the login process
+      value: 
+        email: "newuser3@gmail.com"
+        password: "M1234mohamed"
+
+    WrongPassword:
+      summary: Example of the response of wrong password
+      value:
+        error:
+          status: 401
+          message: "password not correct"
+
+    LoginValidationFailedExample:
+      summary: Example for login validation failures.
+      value:
+        status: 422
+        message: "Validation failed"
+        errors:
+          - path: "email"
+            message: "newuser9gmail.com is not a valid email address"
+          - path: "password"
+            message: "Password must be at least 8 characters long"
+          - path: "password"
+            message: "Password must contain at least one number, one uppercase letter, and one lowercase letter"
+
+    NotFoundUser:
+      summary: Example for not found (register) user
+      value:
+        error:
+          status: 404
+          message: "user is not registered"
+
+    RefreshTokenBodyExample: 
+      summary: Example of the body of the refresh access Token process
+      value:
+        refreshToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3NTEyMjYwMDEsImV4cCI6MTc4Mjc4MzYwMSwiYXVkIjoiNjgxMjljZWE0NGZiMGFjZDMxZTQ1OTZmIiwiaXNzIjoiZ29vZ2xlLmNvbSJ9.zizv5HJGbsCwiKwWKhL_THVnX6uaFgl6dGUL4NC7aGU"
+    
+    BadRequestMissingRefreshTokenExample:
+      summary: Bad Request - Missing Refresh Token
+      value:
+        error:
+          status: 400
+          message: "Bad Request: Refresh token is required."
+
+
+paths:
+  /:
+    get:
+      summary: "main route of api to Test the Expiration of Token"
+      operationId: getRootAndTestTokens
+      security:
+        - bearerAuth: []
+      tags: 
+        - Root
+      responses:
+        200:
+          description: "successful response from the root"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message' 
+        401:
+          description: "Unauthorized. This typically indicates that authentication credentials (e.g., JWT) are missing, invalid, or expired.
+            The specific reason is not exposed for security purposes. Please ensure a valid and unexpired token is provided."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                UnauthorizedGeneric:
+                  $ref: '#/components/examples/UnauthorizedGeneric'               
+        500:
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                InternalServerError:
+                  $ref: '#/components/examples/InternalServerError'
+
+
+
+  /auth/register:
+    post:
+      summary: User register
+      operationId: registerUser
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'  
+            examples:
+              RegisterBodyExample:
+                $ref: '#/components/examples/RegisterBodyExample'
+      responses:
+        201:
+          description: User successfully registered.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+              examples:
+                TokensResponseExample:
+                  $ref: '#/components/examples/TokensResponseExample'
+        422:
+          description: validation Error Happened while registration process
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/validationError'
+              examples:
+                RegisterValidationFailedExample:
+                  $ref: '#/components/examples/RegisterValidationFailedExample'
+        409:
+          description: Conflict - The provided email address is already registered.
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                Conflict:
+                  $ref: '#/components/examples/EmailConflictErrorExample'
+        500:
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                InternalServerError:
+                  $ref: '#/components/examples/InternalServerError'
+
+  /auth/login:
+    post:
+      summary: User Login
+      operationId: loginUser
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'  
+            examples:
+              LoginBodyExample:
+                $ref: '#/components/examples/LoginBodyExample'
+      responses:
+        200:
+          description: User successfully Login.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+              examples:
+                TokensResponseExample:
+                  $ref: '#/components/examples/TokensResponseExample'
+        401:
+          description: "Unauthorized. This typically indicates that the password is not correct"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                WrongPassword:
+                  $ref: '#/components/examples/WrongPassword'
+        404:
+          description: Not Found User. This typically indicates that user not register yet and he needs to register first.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                NotFoundUser:
+                  $ref: '#/components/examples/NotFoundUser'
+
+        422:
+          description: validation Error Happened while registration process
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/validationError'
+              examples:
+                LoginValidationFailedExample:
+                  $ref: '#/components/examples/LoginValidationFailedExample'
+        500:
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                InternalServerError:
+                  $ref: '#/components/examples/InternalServerError'
+
+  /auth/refresh-token:
+    post:
+      summary: Refresh Access Token
+      operationId: refreshToken
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshTokenRequest'  
+            examples:
+              RefreshTokenBodyExample:
+                $ref: '#/components/examples/RefreshTokenBodyExample'
+      responses:
+        200:
+          description: successfully Refresh Access Token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+              examples:
+                TokensResponseExample:
+                  $ref: '#/components/examples/TokensResponseExample'
+        401:
+          description: "Unauthorized. This typically indicates that authentication credentials (e.g., JWT) are missing, invalid, or expired or the accessToken is overwritten in Redis database.
+            The specific reason is not exposed for security purposes. Please ensure a valid and unexpired token is provided or login again."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                UnauthorizedGeneric:
+                  $ref: '#/components/examples/UnauthorizedGeneric'
+        400:
+          description: Bad Request - Missing refresh token in request body. 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                BadRequestMissingRefreshTokenExample:
+                  $ref: '#/components/examples/BadRequestMissingRefreshTokenExample'
+        500:
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                InternalServerError:
+                  $ref: '#/components/examples/InternalServerError'
+  
+  /auth/logout:
+    delete:
+      summary: User Logout
+      operationId: logoutUser
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LogoutRequest'
+            examples:
+              RefreshTokenBodyExample:
+                $ref: '#/components/examples/RefreshTokenBodyExample'
+      responses:
+        '204':
+          description: User successfully logged out (No Content).
+        '400':
+          description: Bad Request - Missing refresh token in request body.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                BadRequestMissingRefreshTokenExample:
+                  $ref: '#/components/examples/BadRequestMissingRefreshTokenExample'
+        '401':
+          description: Unauthorized - Invalid or unknown refresh token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                UnauthorizedGeneric:
+                  $ref: '#/components/examples/UnauthorizedGeneric'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                InternalServerError:
+                  $ref: '#/components/examples/InternalServerError'

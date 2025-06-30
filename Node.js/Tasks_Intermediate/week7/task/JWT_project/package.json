@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon index.js",
-    "redis-gui": "redis-commander --redis-host redis-19032.c300.eu-central-1-1.ec2.redns.redis-cloud.com --redis-port 19032 --redis-password YeTFRztLdbSsXPF6D2MHGBEA6ABOafhU",
+    "dev": "nodemon . -e js,yaml",
+    "redis-gui": "redis-commander --redis-host redis-14927.c15.us-east-1-4.ec2.redns.redis-cloud.com --redis-port 14927 --redis-password CnyZcIOJ4YfSDgrj7hdL5VuxYJHV8fuZ",
     "check-env": "dotenv -e .env -- node -p \"process.env.REDIS_PORT\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -22,6 +22,8 @@
     "mongoose": "^8.14.0",
     "morgan": "^1.10.0",
     "redis": "^5.0.0",
+    "swagger-ui-express": "^5.0.1",
+    "yamljs": "^0.3.0",
     "zod": "^3.24.3"
   },
   "devDependencies": {

@@ -1,6 +1,6 @@
 
 GET http://localhost:3000
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3NDYxMjgxNjAsImV4cCI6MTc0NjEyODE5MCwiYXVkIjoiNjgxMzIwM2NlMGI0ZmZlM2FhZDRiMDMyIiwiaXNzIjoiZ29vZ2xlLmNvbSJ9.FrlOimCYduy4RLAJy-yExPpRYWDsKgTdtupSKGfWV24
+Authorization: Bearer 
 
 ###
 
@@ -8,8 +8,8 @@ POST http://localhost:3000/auth/register
 Content-Type: application/json
 
 {
-    "email": "newuser6@gmail.com",
-    "password": "M1234mohamed",
+    "email": "newuser9@gmail.com",
+    "password": "M1234mohmed",
     "confirmPassword": "M1234mohamed"
 }
 
@@ -20,7 +20,7 @@ Content-Type: application/json
 
 
 {
-    "email": "newuser1@gmail.com",
+    "email": "newuser@gmail.com",
     "password": "M1234mohamed"
 }
 
@@ -30,7 +30,7 @@ POST http://localhost:3000/auth/refresh-token
 Content-Type: application/json
 
 {
-    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3NDYxMjgxNjAsImV4cCI6MTc3NzY4NTc2MCwiYXVkIjoiNjgxMzIwM2NlMGI0ZmZlM2FhZDRiMDMyIiwiaXNzIjoiZ29vZ2xlLmNvbSJ9.bOl96fYyVL1Gv6Xc9p1RiGG8y34Kp1XpCHKP1jv7qAk"
+    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3NTEyMjkwNjUsImV4cCI6MTc4Mjc4NjY2NSwiYXVkIjoiNjgxMjljZWE0NGZiMGFjZDMxZTQ1OTZmIiwiaXNzIjoiZ29vZ2xlLmNvbSJ9.4NNVPG5qRx2A8erAPxIRpvFYKQWfe9oiWzRS5zM4Rao"
 }
 
 ###
@@ -39,5 +39,5 @@ DELETE http://localhost:3000/auth/logout
 Content-Type: application/json
 
 {
-    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3NDYxMjgxNjAsImV4cCI6MTc3NzY4NTc2MCwiYXVkIjoiNjgxMzIwM2NlMGI0ZmZlM2FhZDRiMDMyIiwiaXNzIjoiZ29vZ2xlLmNvbSJ9.bOl96fYyVL1Gv6Xc9p1RiGG8y34Kp1XpCHKP1jv7qAk"
+    "refreshToken": ""
 }
